@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Yangi post - InstaBlog{% endblock %}
+{% block content %}
+<div class="create-container">
+    <div class="create-card">
+        <h2><i class="fas fa-plus-circle"></i> Yangi post yaratish</h2>
+        <form method="POST" enctype="multipart/form-data" class="create-form" id="create-post-form">
+            {{ form.hidden_tag() }}
+
+            <div class="image-upload-area" id="image-upload-area">
+                <div class="upload-placeholder" id="upload-placeholder">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Rasm tanlang yoki bu yerga tashlang</p>
+                    <span>JPG, PNG, GIF, WEBP</span>
+                </div>
+                <img id="image-preview" class="image-preview" style="display:none;">
+                {{ form.image(class="file-input", id="image-input", accept="image/*") }}
+            </div>
+            {% for error in form.image.errors %}
+            <span class="error-text">{{ error }}</span>
+            {% endfor %}
+
+            <div class="form-group">
+                {{ form.caption(class="form-textarea", placeholder="Izoh yozing...", rows="4", id="caption-input") }}
+                <div class="char-counter"><span id="char-count">0</span>/2200</div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ form.location(class="form-input", placeholder="Joylashuv qo'shish", id="location-input") }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="create-submit">
+                <i class="fas fa-share"></i> Ulashish
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const imageInput = document.getElementById('image-input');
+    const preview = document.getElementById('image-preview');
+    const placeholder = document.getElementById('upload-placeholder');
+    const uploadArea = document.getElementById('image-upload-area');
+
+    uploadArea.addEventListener('click', () => imageInput.click());
+    uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            imageInput.files = e.dataTransfer.files;
+            showPreview(e.dataTransfer.files[0]);
+        }
+    });
+
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length) showPreview(e.target.files[0]);
+    });
+
+    function showPreview(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    const caption = document.getElementById('caption-input');
+    const counter = document.getElementById('char-count');
+    caption.addEventListener('input', () => { counter.textContent = caption.value.length; });
+</script>
+{% endblock %}

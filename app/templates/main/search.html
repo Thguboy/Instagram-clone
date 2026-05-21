@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Qidirish - InstaBlog{% endblock %}
+{% block content %}
+<div class="search-container">
+    <div class="search-header">
+        <form action="{{ url_for('main.search') }}" method="GET" class="search-form-big">
+            <i class="fas fa-search"></i>
+            <input type="text" name="q" value="{{ query }}" placeholder="Foydalanuvchilarni qidirish..." autofocus id="search-page-input">
+        </form>
+    </div>
+    {% if users %}
+    <div class="search-results">
+        {% for user in users %}
+        <a href="{{ url_for('users.profile', username=user.username) }}" class="search-result-item">
+            <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="{{ user.username }}"
+                 class="search-avatar"
+                 onerror="this.src='https://ui-avatars.com/api/?name={{ user.username }}&background=6366f1&color=fff&size=50'">
+            <div class="search-user-info">
+                <span class="search-username">{{ user.username }}</span>
+                <span class="search-fullname">{{ user.full_name }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% elif query %}
+    <div class="empty-state small">
+        <i class="fas fa-user-slash"></i>
+        <p>Hech qanday foydalanuvchi topilmadi</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

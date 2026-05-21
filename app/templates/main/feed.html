@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Bosh sahifa - InstaBlog{% endblock %}
+{% block content %}
+<div class="feed-container">
+    {% if posts.items %}
+        {% for post in posts.items %}
+        <article class="post-card" id="post-{{ post.id }}">
+            <div class="post-header">
+                <a href="{{ url_for('users.profile', username=post.author.username) }}" class="post-author">
+                    <img src="{{ url_for('static', filename='uploads/' + post.author.avatar) }}" alt="{{ post.author.username }}"
+                         class="post-avatar"
+                         onerror="this.src='https://ui-avatars.com/api/?name={{ post.author.username }}&background=6366f1&color=fff&size=40'">
+                    <div class="post-author-info">
+                        <span class="post-username">{{ post.author.username }}</span>
+                        {% if post.location %}
+                        <span class="post-location">{{ post.location }}</span>
+                        {% endif %}
+                    </div>
+                </a>
+                {% if post.author == current_user %}
+                <div class="post-menu">
+                    <button class="post-menu-btn" onclick="toggleMenu(this)"><i class="fas fa-ellipsis-h"></i></button>
+                    <div class="post-menu-dropdown">
+                        <form action="{{ url_for('posts.delete', post_id=post.id) }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="menu-item danger" id="delete-post-{{ post.id }}">
+                                <i class="fas fa-trash"></i> O'chirish
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="post-image">
+                <img src="{{ url_for('static', filename='uploads/' + post.image) }}" alt="Post"
+                     ondblclick="likePost({{ post.id }})" loading="lazy">
+                <div class="like-animation" id="like-anim-{{ post.id }}">
+                    <i class="fas fa-heart"></i>
+                </div>
+            </div>
+
+            <div class="post-actions">
+                <div class="post-actions-left">
+                    <button class="action-btn like-btn {% if post.is_liked_by(current_user) %}liked{% endif %}"
+                            onclick="likePost({{ post.id }})" id="like-btn-{{ post.id }}">
+                        <i class="{% if post.is_liked_by(current_user) %}fas{% else %}far{% endif %} fa-heart"></i>
+                    </button>
+                    <a href="{{ url_for('posts.detail', post_id=post.id) }}" class="action-btn">
+                        <i class="far fa-comment"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="post-likes" id="likes-count-{{ post.id }}">
+                <span>{{ post.likes_count }} ta yoqtirish</span>
+            </div>
+
+            <div class="post-caption">
+                {% if post.caption %}
+                <p><a href="{{ url_for('users.profile', username=post.author.username) }}" class="caption-username">{{ post.author.username }}</a> {{ post.caption }}</p>
+                {% endif %}
+            </div>
+
+            {% if post.comments.count() > 0 %}
+            <a href="{{ url_for('posts.detail', post_id=post.id) }}" class="view-comments">
+                Barcha {{ post.comments.count() }} ta izohni ko'rish
+            </a>
+            {% endif %}
+
+            <div class="post-time">
+                <time>{{ post.created_at.strftime('%d.%m.%Y') }}</time>
+            </div>
+
+            <!-- Quick Comment -->
+            <form class="quick-comment" onsubmit="submitComment(event, {{ post.id }})">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="body" placeholder="Izoh qo'shing..." class="comment-input" id="comment-input-{{ post.id }}">
+                <button type="submit" class="comment-submit">Yuborish</button>
+            </form>
+        </article>
+        {% endfor %}
+
+        <!-- Pagination -->
+        {% if posts.has_next %}
+        <div class="load-more">
+            <a href="{{ url_for('main.feed', page=posts.next_num) }}" class="btn btn-outline" id="load-more-feed">Ko'proq yuklash</a>
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-camera-retro"></i>
+            <h3>Hali postlar yo'q</h3>
+            <p>Biror kishini kuzating yoki birinchi postingizni yarating!</p>
+            <a href="{{ url_for('main.explore') }}" class="btn btn-primary">Kashf qilish</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

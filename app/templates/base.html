@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="InstaBlog - Instagram uslubidagi blog platformasi">
+    <title>{% block title %}InstaBlog{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% if current_user.is_authenticated %}
+    <!-- Navigation -->
+    <nav class="navbar" id="main-navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('main.feed') }}" class="nav-logo">
+                <i class="fa-brands fa-instagram"></i>
+                <span>InstaBlog</span>
+            </a>
+
+            <div class="nav-search">
+                <form action="{{ url_for('main.search') }}" method="GET" id="search-form">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" name="q" placeholder="Qidirish..." autocomplete="off" id="search-input">
+                </form>
+            </div>
+
+            <div class="nav-links">
+                <a href="{{ url_for('main.feed') }}" class="nav-link" title="Bosh sahifa">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="{{ url_for('main.explore') }}" class="nav-link" title="Kashf qilish">
+                    <i class="fas fa-compass"></i>
+                </a>
+                <a href="{{ url_for('posts.create') }}" class="nav-link" title="Yangi post">
+                    <i class="fas fa-plus-square"></i>
+                </a>
+                <a href="{{ url_for('main.contact') }}" class="nav-link" title="Bog'lanish">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('main.agro_admin') }}" class="nav-link" title="Agro Admin">
+                    <i class="fas fa-leaf"></i>
+                </a>
+                {% endif %}
+                <a href="{{ url_for('users.profile', username=current_user.username) }}" class="nav-link nav-avatar" title="Profil">
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.avatar) }}" alt="avatar"
+                         onerror="this.src='https://ui-avatars.com/api/?name={{ current_user.username }}&background=6366f1&color=fff&size=32'">
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="nav-link" title="Chiqish">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">
+            <span>{{ message }}</span>
+            <button class="flash-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main-content {% if not current_user.is_authenticated %}auth-page{% endif %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Mobile Bottom Nav -->
+    {% if current_user.is_authenticated %}
+    <nav class="mobile-nav">
+        <a href="{{ url_for('main.feed') }}" class="mobile-nav-link"><i class="fas fa-home"></i></a>
+        <a href="{{ url_for('main.explore') }}" class="mobile-nav-link"><i class="fas fa-compass"></i></a>
+        <a href="{{ url_for('posts.create') }}" class="mobile-nav-link"><i class="fas fa-plus-square"></i></a>
+        {% if current_user.is_admin %}
+        <a href="{{ url_for('main.agro_admin') }}" class="mobile-nav-link"><i class="fas fa-leaf"></i></a>
+        {% endif %}
+        <a href="{{ url_for('users.profile', username=current_user.username) }}" class="mobile-nav-link"><i class="fas fa-user"></i></a>
+    </nav>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

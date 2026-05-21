@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }} - InstaBlog{% endblock %}
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar-wrapper">
+            <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="{{ user.username }}"
+                 class="profile-avatar"
+                 onerror="this.src='https://ui-avatars.com/api/?name={{ user.username }}&background=6366f1&color=fff&size=150'">
+        </div>
+        <div class="profile-info">
+            <div class="profile-top">
+                <h1 class="profile-username">{{ user.username }}</h1>
+                {% if user == current_user %}
+                    <a href="{{ url_for('users.edit_profile') }}" class="btn btn-outline btn-sm" id="edit-profile-btn">Profilni tahrirlash</a>
+                {% else %}
+                    {% if current_user.is_following(user) %}
+                    <button class="btn btn-outline btn-sm follow-btn" onclick="toggleFollow('{{ user.username }}')" id="follow-btn">
+                        Kuzatilmoqda
+                    </button>
+                    {% else %}
+                    <button class="btn btn-primary btn-sm follow-btn" onclick="toggleFollow('{{ user.username }}')" id="follow-btn">
+                        Kuzatish
+                    </button>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="profile-stats">
+                <span class="stat"><strong>{{ user.posts_count }}</strong> post</span>
+                <a href="{{ url_for('users.followers_list', username=user.username) }}" class="stat">
+                    <strong id="followers-count">{{ user.followers_count }}</strong> kuzatuvchi
+                </a>
+                <a href="{{ url_for('users.following_list', username=user.username) }}" class="stat">
+                    <strong>{{ user.following_count }}</strong> kuzatilgan
+                </a>
+            </div>
+            <div class="profile-bio">
+                {% if user.full_name %}<h2 class="profile-fullname">{{ user.full_name }}</h2>{% endif %}
+                {% if user.bio %}<p>{{ user.bio }}</p>{% endif %}
+                {% if user.website %}<a href="{{ user.website }}" target="_blank" class="profile-website"><i class="fas fa-link"></i> {{ user.website }}</a>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-posts">
+        {% if posts.items %}
+        <div class="profile-grid">
+            {% for post in posts.items %}
+            <a href="{{ url_for('posts.detail', post_id=post.id) }}" class="profile-grid-item" id="profile-post-{{ post.id }}">
+                <img src="{{ url_for('static', filename='uploads/' + post.image) }}" alt="Post" loading="lazy">
+                <div class="profile-grid-overlay">
+                    <span><i class="fas fa-heart"></i> {{ post.likes_count }}</span>
+                    <span><i class="fas fa-comment"></i> {{ post.comments.count() }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% if posts.has_next %}
+        <div class="load-more">
+            <a href="{{ url_for('users.profile', username=user.username, page=posts.next_num) }}" class="btn btn-outline">Ko'proq yuklash</a>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-camera"></i>
+            <h3>Hali postlar yo'q</h3>
+            {% if user == current_user %}
+            <a href="{{ url_for('posts.create') }}" class="btn btn-primary">Birinchi postingizni yarating</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

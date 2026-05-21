@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Kashf qilish - InstaBlog{% endblock %}
+{% block content %}
+<div class="explore-container">
+    <h2 class="section-title"><i class="fas fa-compass"></i> Kashf qilish</h2>
+    {% if posts.items %}
+    <div class="explore-grid">
+        {% for post in posts.items %}
+        <a href="{{ url_for('posts.detail', post_id=post.id) }}" class="explore-item" id="explore-{{ post.id }}">
+            <img src="{{ url_for('static', filename='uploads/' + post.image) }}" alt="Post" loading="lazy">
+            <div class="explore-overlay">
+                <span><i class="fas fa-heart"></i> {{ post.likes_count }}</span>
+                <span><i class="fas fa-comment"></i> {{ post.comments.count() }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% if posts.has_next %}
+    <div class="load-more">
+        <a href="{{ url_for('main.explore', page=posts.next_num) }}" class="btn btn-outline">Ko'proq yuklash</a>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-images"></i>
+        <h3>Hali postlar yo'q</h3>
+        <p>Birinchi bo'lib post yarating!</p>
+        <a href="{{ url_for('posts.create') }}" class="btn btn-primary">Post yaratish</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

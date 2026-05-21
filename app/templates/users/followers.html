@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - {{ user.username }} - InstaBlog{% endblock %}
+{% block content %}
+<div class="followers-container">
+    <div class="followers-card">
+        <div class="followers-header">
+            <a href="{{ url_for('users.profile', username=user.username) }}" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2>{{ title }}</h2>
+        </div>
+        {% if users_list %}
+        <div class="followers-list">
+            {% for u in users_list %}
+            <div class="follower-item">
+                <a href="{{ url_for('users.profile', username=u.username) }}" class="follower-info">
+                    <img src="{{ url_for('static', filename='uploads/' + u.avatar) }}" alt="{{ u.username }}"
+                         class="follower-avatar"
+                         onerror="this.src='https://ui-avatars.com/api/?name={{ u.username }}&background=6366f1&color=fff&size=44'">
+                    <div>
+                        <span class="follower-username">{{ u.username }}</span>
+                        <span class="follower-fullname">{{ u.full_name }}</span>
+                    </div>
+                </a>
+                {% if u != current_user %}
+                <button class="btn btn-sm {% if current_user.is_following(u) %}btn-outline{% else %}btn-primary{% endif %}"
+                        onclick="toggleFollow('{{ u.username }}', this)">
+                    {% if current_user.is_following(u) %}Kuzatilmoqda{% else %}Kuzatish{% endif %}
+                </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state small">
+            <p>Hali hech kim yo'q</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

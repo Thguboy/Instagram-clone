@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Ro'yxatdan o'tish - InstaBlog{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i class="fa-brands fa-instagram"></i>
+            <h1>InstaBlog</h1>
+            <p>Do'stlaringizning foto va videolarini ko'rish uchun ro'yxatdan o'ting</p>
+        </div>
+        <form method="POST" class="auth-form" id="register-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    {{ form.email(class="form-input", placeholder="Email", id="reg-email") }}
+                </div>
+                {% for error in form.email.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-id-card"></i>
+                    {{ form.full_name(class="form-input", placeholder="To'liq ism", id="reg-fullname") }}
+                </div>
+                {% for error in form.full_name.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    {{ form.username(class="form-input", placeholder="Foydalanuvchi nomi", id="reg-username") }}
+                </div>
+                {% for error in form.username.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    {{ form.password(class="form-input", placeholder="Parol", id="reg-password") }}
+                </div>
+                {% for error in form.password.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    {{ form.password2(class="form-input", placeholder="Parolni tasdiqlang", id="reg-password2") }}
+                </div>
+                {% for error in form.password2.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="register-submit">Ro'yxatdan o'tish</button>
+        </form>
+        <div class="auth-divider">
+            <span>YOKI</span>
+        </div>
+        <div class="auth-footer">
+            <p>Akkauntingiz bormi? <a href="{{ url_for('auth.login') }}">Kirish</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

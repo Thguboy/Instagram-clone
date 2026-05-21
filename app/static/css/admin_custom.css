@@ -1,0 +1,68 @@
+/* Flask-Admin Premium Dark Theme */
+:root {
+    --admin-bg: #0f172a;
+    --admin-card: #1e293b;
+    --admin-border: #334155;
+    --admin-text: #f8fafc;
+    --admin-accent: #6366f1;
+    --admin-accent-hover: #4f46e5;
+}
+
+body {
+    background-color: var(--admin-bg) !important;
+    color: var(--admin-text) !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.navbar-inverse, .navbar-default {
+    background-color: var(--admin-card) !important;
+    border-bottom: 1px solid var(--admin-border) !important;
+}
+
+.navbar-brand, .nav-link, .navbar-nav > li > a {
+    color: var(--admin-text) !important;
+}
+
+.well, .card, .panel {
+    background-color: var(--admin-card) !important;
+    border: 1px solid var(--admin-border) !important;
+    color: var(--admin-text) !important;
+    border-radius: 12px !important;
+}
+
+.table {
+    color: var(--admin-text) !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(99, 102, 241, 0.1) !important;
+}
+
+.btn-primary {
+    background-color: var(--admin-accent) !important;
+    border-color: var(--admin-accent) !important;
+    border-radius: 8px !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--admin-accent-hover) !important;
+}
+
+.form-control, .select2-container--default .select2-selection--single {
+    background-color: var(--admin-bg) !important;
+    border: 1px solid var(--admin-border) !important;
+    color: var(--admin-text) !important;
+    border-radius: 8px !important;
+}
+
+/* Custom badges */
+.badge {
+    border-radius: 20px !important;
+    padding: 5px 10px !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--admin-bg); }
+::-webkit-scrollbar-thumb { background: var(--admin-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--admin-accent); }

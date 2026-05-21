@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Kirish - InstaBlog{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i class="fa-brands fa-instagram"></i>
+            <h1>InstaBlog</h1>
+            <p>Do'stlaringiz bilan lahzalarni baham ko'ring</p>
+        </div>
+        <form method="POST" class="auth-form" id="login-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    {{ form.username(class="form-input", placeholder="Foydalanuvchi nomi", id="login-username") }}
+                </div>
+                {% for error in form.username.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    {{ form.password(class="form-input", placeholder="Parol", id="login-password") }}
+                </div>
+                {% for error in form.password.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-check">
+                {{ form.remember_me(id="remember-me") }}
+                <label for="remember-me">Meni eslab qol</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="login-submit">Kirish</button>
+        </form>
+        <div class="auth-divider">
+            <span>YOKI</span>
+        </div>
+        <div class="auth-footer">
+            <p>Akkauntingiz yo'qmi? <a href="{{ url_for('auth.register') }}">Ro'yxatdan o'ting</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
